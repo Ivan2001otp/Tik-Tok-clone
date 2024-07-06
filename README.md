@@ -1,2 +1,2 @@
-# React-Todo-App
-This project helps to understand the concepts of React like jsx , components , directories , state , hooks and much more.
+# Tik-Tok-app
+This project built with Flutter and backend is Firebase.
