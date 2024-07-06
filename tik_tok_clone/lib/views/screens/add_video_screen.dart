@@ -1,21 +1,50 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:tik_tok_clone/util/constants.dart';
 import 'package:tik_tok_clone/views/screens/confirm_screen.dart';
 
 class AddVideoScreen extends StatelessWidget {
   const AddVideoScreen({super.key});
 
+  Future<bool> _requestCameraAndStoragePermissions() async {
+    var grantedStoragePermission =
+        await Permission.manageExternalStorage.request();
+    var grantedCameraPermission = await Permission.camera.request();
+
+    return grantedCameraPermission.isGranted &&
+        grantedStoragePermission.isGranted;
+  }
+
   pickVideo(ImageSource src, BuildContext context) async {
-    final video = await ImagePicker().pickVideo(source: src);
+    bool status = await _requestCameraAndStoragePermissions();
+    if (!status) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Camera and storage permissions are required'),
+        ),
+      );
+      return;
+    }
+
+    XFile? video = await ImagePicker().pickVideo(source: src);
 
     if (video != null) {
       //confirma page
-      // Navigator.of(context).push(
-      //   MaterialPageRoute(
-      //     builder: (context) => ConfirmScreen(),
-      //   ),
-      // );
+      String path = video.path;
+      File file = File(path);
+      // final file = File.fromRawPath(video.files.single.bytes!);
+
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => ConfirmScreen(
+            videoFile: file,
+            videoPath: path,
+          ),
+        ),
+      );
     }
   }
 
@@ -25,8 +54,13 @@ class AddVideoScreen extends StatelessWidget {
       builder: (context) => SimpleDialog(
         children: [
           SimpleDialogOption(
-            onPressed: () {
+            onPressed: () async {
               pickVideo(ImageSource.gallery, context);
+              // FilePickerResult? video = await FilePicker.platform.pickFiles(
+              //   type: FileType.video,
+              // );
+
+              // debugPrint("${video?.files.single.path!}");
             },
             child: Row(
               children: [

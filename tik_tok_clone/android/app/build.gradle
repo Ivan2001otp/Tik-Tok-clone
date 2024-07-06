@@ -69,4 +69,5 @@ flutter {
 
 dependencies {
     implementation 'com.otaliastudios:transcoder:0.10.5'
+    implementation 'com.google.android.exoplayer:exoplayer:2.19.1'
 }
