@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get/get.dart';
+import 'package:tik_tok_clone/controllers/upload_video_controller.dart';
 import 'package:tik_tok_clone/util/constants.dart';
 import 'package:tik_tok_clone/views/widgets/text_input_field.dart';
 import 'package:video_player/video_player.dart';
@@ -21,36 +24,38 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
 
   TextEditingController _songController = TextEditingController();
   TextEditingController _captionController = TextEditingController();
+  UploadVideoController uploadVideoController =
+      Get.put(UploadVideoController());
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // setState(() {
-    //fijkplayer
-    // controller = VideoPlayerController.networkUrl(Uri.parse(
-    // 'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4'));
 
-    // });
-
-    // controller.initialize();
-    // controller.play();
-    // controller.setVolume(0.5);
-    // controller.setLooping(true);
-
+    debugPrint("The url is ${widget.videoPath}");
     fijkPlayer.setDataSource(
-       'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4');
+      widget.videoPath,
+      autoPlay: true,
+      showCover: true,
+    );
     fijkPlayer.setLoop(0);
     fijkPlayer.setVolume(0.5);
     fijkPlayer.start();
   }
 
   @override
+  void deactivate() {
+    // TODO: implement deactivate
+    super.deactivate();
+    fijkPlayer.pause();
+  }
+
+  @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+    fijkPlayer.release();
     fijkPlayer.dispose();
-    // controller.dispose();
   }
 
   @override
@@ -59,12 +64,12 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(
-              height: 30,
-            ),
+            // const SizedBox(
+            //   height: 10,
+            // ),
             SizedBox(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.sizeOf(context).height / 1.5,
+              height: MediaQuery.sizeOf(context).height / 1.4,
               child: FijkView(
                 color: backgroundColor,
                 fit: FijkFit.fill,
@@ -107,7 +112,21 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                     height: 10,
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      EasyLoading.instance
+                        ..backgroundColor = Colors.red
+                        ..progressColor = Colors.white
+                        ..textColor = Colors.white;
+
+                      EasyLoading.show(status: "Uploading..");
+
+                      uploadVideoController.uploadVideo(
+                        _songController.text,
+                        _captionController.text,
+                        widget.videoPath,
+                      );
+                      EasyLoading.dismiss();
+                    },
                     child: Text(
                       "Share !",
                       style: TextStyle(
