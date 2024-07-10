@@ -31,7 +31,7 @@ class AddVideoScreen extends StatelessWidget {
 
     XFile? video = await ImagePicker().pickVideo(source: src);
 
-    if (video != null) {
+    if (video != null ) {
       //confirma page
       String path = video.path;
       File file = File(path);

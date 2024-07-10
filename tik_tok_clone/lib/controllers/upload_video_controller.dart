@@ -10,8 +10,10 @@ import 'package:video_compress/video_compress.dart' as VD;
 
 class UploadVideoController extends GetxController {
   Future<File> _compressVideo(String videoPath) async {
-    await VD.VideoCompress.deleteAllCache();
-
+    if (VD.VideoCompress.isCompressing) {
+     await VD.VideoCompress.cancelCompression();
+     await VD.VideoCompress.deleteAllCache();
+    }
     final compressedVideo = await VD.VideoCompress.compressVideo(
       videoPath,
     );
