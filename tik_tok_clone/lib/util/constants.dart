@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:tik_tok_clone/controllers/auth_controller.dart';
 import 'package:tik_tok_clone/views/screens/add_video_screen.dart';
+import 'package:tik_tok_clone/views/screens/profile_screen.dart';
 import 'package:tik_tok_clone/views/screens/search_screen.dart';
 import 'package:tik_tok_clone/views/screens/video_screen.dart';
 
@@ -23,5 +24,5 @@ List pages = [
  SearchScreen(),
   AddVideoScreen(),
   Text("message screen"),
-  Text("profile screen"),
+  ProfileScreen(uid:authController.user.uid),
 ];
