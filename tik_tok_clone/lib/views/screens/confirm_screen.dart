@@ -40,7 +40,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
     );
     fijkPlayer.setLoop(0);
     fijkPlayer.setVolume(0.5);
-    fijkPlayer.start();
+    fijkPlayer.stop();
   }
 
   @override
@@ -113,19 +113,22 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      EasyLoading.instance
-                        ..backgroundColor = Colors.red
-                        ..progressColor = Colors.white
-                        ..textColor = Colors.white;
+                      if (_songController.text.isNotEmpty &&
+                          _captionController.text.isNotEmpty) {
+                        EasyLoading.show(status: "Uploading..");
 
-                      EasyLoading.show(status: "Uploading..");
+                        await uploadVideoController.uploadVideo(
+                          _songController.text,
+                          _captionController.text,
+                          widget.videoPath,
+                        );
+                        EasyLoading.dismiss();
 
-                      uploadVideoController.uploadVideo(
-                        _songController.text,
-                        _captionController.text,
-                        widget.videoPath,
-                      );
-                      EasyLoading.dismiss();
+                        Navigator.of(context).pop();
+                      } else {
+                        Get.snackbar(
+                            "Hey Listen!", "Kindly add song name and caption!");
+                      }
                     },
                     child: Text(
                       "Share !",

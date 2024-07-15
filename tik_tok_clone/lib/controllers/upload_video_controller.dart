@@ -11,8 +11,8 @@ import 'package:video_compress/video_compress.dart' as VD;
 class UploadVideoController extends GetxController {
   Future<File> _compressVideo(String videoPath) async {
     if (VD.VideoCompress.isCompressing) {
-     await VD.VideoCompress.cancelCompression();
-     await VD.VideoCompress.deleteAllCache();
+      await VD.VideoCompress.cancelCompression();
+      await VD.VideoCompress.deleteAllCache();
     }
     final compressedVideo = await VD.VideoCompress.compressVideo(
       videoPath,
@@ -24,8 +24,9 @@ class UploadVideoController extends GetxController {
   _uploadVideoToStorage(String videoId, String videoPath) async {
     Reference ref = firebaseStorage.ref().child("videos").child(videoId);
 
-    File compressedVideo = await _compressVideo(videoPath);
-    UploadTask uploadTask = ref.putFile(compressedVideo);
+    // File compressedVideo = await _compressVideo(videoPath);
+    File uploadedVideoFile = File(videoPath);
+    UploadTask uploadTask = ref.putFile(uploadedVideoFile);
     TaskSnapshot snap = await uploadTask;
 
     String downloadUrl = await snap.ref.getDownloadURL();
@@ -56,8 +57,8 @@ class UploadVideoController extends GetxController {
       var allDocs = await fireStore.collection("videos").get();
       int len = allDocs.docs.length;
       String videoUrl = await _uploadVideoToStorage("Video $len", videoPath);
-      String thumbnailUrl =
-          await _uploadImageToStorage("Video $len", videoPath); //thumbnail
+      // String thumbnailUrl =
+          // await _uploadImageToStorage("Video $len", videoPath); //thumbnail
 
       Video video = Video(
         username: (userDoc.data()! as Map<String, dynamic>)['name'],
@@ -70,7 +71,7 @@ class UploadVideoController extends GetxController {
         caption: caption,
         videoUrl: videoUrl,
         profilePhoto: (userDoc.data()! as Map<String, dynamic>)['profilePhoto'],
-        thumbNail: thumbnailUrl,
+        thumbNail: '',
       );
 
       await fireStore.collection("videos").doc("Video $len").set(
