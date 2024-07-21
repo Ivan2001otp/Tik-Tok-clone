@@ -72,7 +72,7 @@ class AddVideoScreen extends StatelessWidget {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => ConfirmScreen(
-            videoFile: file,
+            videoFile: file.absolute,
             videoPath: path,
           ),
         ),
@@ -191,9 +191,9 @@ class AddVideoScreen extends StatelessWidget {
           SimpleDialogOption(
             onPressed: () {
               pickContent(ImageSource.camera, context);
-              if (context.mounted) {
-                Navigator.of(context).pop();
-              }
+              // if (context.mounted) {
+              //   Navigator.of(context).pop();
+              // }
             },
             child: Row(
               children: [
