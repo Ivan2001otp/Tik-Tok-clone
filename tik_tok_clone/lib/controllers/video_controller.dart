@@ -37,4 +37,19 @@ class VideoController extends GetxController {
       });
     }
   }
+
+  shareVideo(String id) async {
+    DocumentSnapshot doc = await fireStore.collection("videos").doc(id).get();
+
+    var uid = authController.user.uid;
+    if ((doc.data()! as dynamic)['shareCount'].contains(uid)) {
+      await fireStore.collection('videos').doc(id).update({
+        'shareCount': FieldValue.arrayRemove([uid])
+      });
+    }else{
+      await fireStore.collection('videos').doc(id).update({
+        'shareCount': FieldValue.arrayUnion([uid])
+      });
+    }
+  }
 }

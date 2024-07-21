@@ -80,7 +80,7 @@ class AddVideoScreen extends StatelessWidget {
     }
   }
 
-  pickContent(ImageSource source, context, {bool pickVideo = false}) async {
+  pickContent(ImageSource source,BuildContext context, {bool pickVideo = false}) async {
     bool permitStatus = await _requestCameraAndStoragePermissions();
     if (!permitStatus) {
       Get.snackbar("Permission Denied",
@@ -98,6 +98,7 @@ class AddVideoScreen extends StatelessWidget {
             allowMultiple: false,
             withData: true,
             type: FileType.video,
+            allowCompression: true,
             // allowedExtensions: ['mp4', 'mp3', 'm4a', 'wav','ogg']
           );
 
@@ -123,38 +124,8 @@ class AddVideoScreen extends StatelessWidget {
               return;
             }
           }
-        } else {
-          FilePickerResult? result = await FilePicker.platform.pickFiles(
-            allowMultiple: false,
-            withData: true,
-            type: FileType.image,
-            compressionQuality: 50,
-            allowCompression: true,
-          );
-
-          if (result != null) {
-            PlatformFile file = result.files.first;
-            double size = file.size / (1024 * 1024);
-            if (size <= 10) {
-              debugPrint("Less than 10 mb");
-              String path = file.path!;
-              File uploadedFile = File(path);
-
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => ConfirmScreen(
-                    videoFile: uploadedFile,
-                    videoPath: path,
-                  ),
-                ),
-              );
-            } else {
-              Get.snackbar("Size exceeded",
-                  "Please try to upload assets of less than 10MB.");
-              return;
-            }
-          }
         }
+        
 
         break;
     }
@@ -168,9 +139,9 @@ class AddVideoScreen extends StatelessWidget {
           SimpleDialogOption(
             onPressed: () async {
               pickContent(ImageSource.gallery, context, pickVideo: true);
-              if (context.mounted) {
-                Navigator.of(context).pop();
-              }
+              // if (context.mounted) {
+              //   Navigator.of(context).pop();
+              // }
             },
             child: Row(
               children: [
@@ -190,7 +161,7 @@ class AddVideoScreen extends StatelessWidget {
           ),
           SimpleDialogOption(
             onPressed: () {
-              pickContent(ImageSource.camera, context);
+               pickContent(ImageSource.camera, context);
               // if (context.mounted) {
               //   Navigator.of(context).pop();
               // }

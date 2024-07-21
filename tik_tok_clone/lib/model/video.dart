@@ -6,7 +6,7 @@ class Video {
   String id;
   List likes;
   int commentCount;
-  int shareCount;
+  List shareCount;
   String songName;
   String caption;
   String videoUrl;

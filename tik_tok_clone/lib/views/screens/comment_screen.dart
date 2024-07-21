@@ -22,164 +22,193 @@ class CommentScreen extends StatelessWidget {
 
     return Scaffold(
         resizeToAvoidBottomInset: true,
-        body: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          child: SizedBox(
-            width: size.width,
-            height: size.height,
-            child: Column(
-              children: [
-                Expanded(
-                  child: Obx(() {
-                    return ListView.builder(
-                        itemCount: _commentController.comments.length,
-                        itemBuilder: (context, index) {
-                          final comment = _commentController.comments[index];
-
-                          return Column(
-                            children: [
-                              
-                              ListTile(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                ),
-                                leading: CircleAvatar(
-                                  radius: 24,
-                                  backgroundColor: Colors.black54,
-                                  backgroundImage: NetworkImage(
-                                    comment.profilePhoto,
-                                  ),
-                                ),
-                                title: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      comment.username,
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    Text(
-                                      comment.comment,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                subtitle: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          tago.format(
-                                              comment.datePublished.toDate()),
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          '${comment.likes.length} likes',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.white,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                trailing: InkWell(
-                                  onTap: () {
-                                    _commentController.likeComment(comment.id);
-                                  },
-                                  child: comment.likes
-                                          .contains(authController.user.uid)
-                                      ? Icon(
-                                          Icons.favorite,
-                                          size: 25,
-                                          color: Colors.red,
-                                        )
-                                      : Icon(
-                                          Icons.favorite_outline,
-                                          size: 25,
-                                          color: Colors.white,
-                                        ),
+        // appBar: AppBar(
+        //   leading: Icon(
+        //     Icons.comment_outlined,
+        //     color: Colors.white,
+        //     size: 30,
+        //   ),
+        //   title: Text(
+        //     'Comments',
+        //     style: TextStyle(
+        //       color: Colors.white,
+        //       fontSize: 20,
+        //     ),
+        //   ),
+        // ),
+        body: Expanded(
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: SizedBox(
+              width: size.width,
+              height: size.height,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Obx(() {
+                      return _commentController.comments.length == 0
+                          ? Center(
+                              child: Text(
+                                'Be first to Comment !',
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 20,
                                 ),
                               ),
-                              const Divider(
-                                endIndent: 10,
-                                indent: 10,
-                                thickness: 4.0,
-                              ),
-                            ],
-                          );
-                        });
-                  }),
-                ),
-                ListTile(
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                      color: Colors.white,
-                      style: BorderStyle.solid,
-                      strokeAlign: BorderSide.strokeAlignOutside,
-                    ),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(40),
-                      topRight: Radius.circular(40),
-                    ),
+                            )
+                          : ListView.builder(
+                              itemCount: _commentController.comments.length,
+                              itemBuilder: (context, index) {
+                                final comment =
+                                    _commentController.comments[index];
+          
+                                return Column(
+                                  children: [
+                                    ListTile(
+                                      contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                      ),
+                                      leading: CircleAvatar(
+                                        radius: 24,
+                                        backgroundColor: Colors.black54,
+                                        backgroundImage: NetworkImage(
+                                          comment.profilePhoto,
+                                        ),
+                                      ),
+                                      title: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            comment.username,
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                          Text(
+                                            comment.comment,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      subtitle: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                tago.format(comment.datePublished
+                                                    .toDate()),
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                '${comment.likes.length} likes',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      trailing: InkWell(
+                                        onTap: () {
+                                          _commentController
+                                              .likeComment(comment.id);
+                                        },
+                                        child: comment.likes
+                                                .contains(authController.user.uid)
+                                            ? Icon(
+                                                Icons.favorite,
+                                                size: 25,
+                                                color: Colors.red,
+                                              )
+                                            : Icon(
+                                                Icons.favorite_outline,
+                                                size: 25,
+                                                color: Colors.white,
+                                              ),
+                                      ),
+                                    ),
+                                    const Divider(
+                                      endIndent: 10,
+                                      indent: 10,
+                                      thickness: 4.0,
+                                    ),
+                                  ],
+                                );
+                              });
+                    }),
                   ),
-                  title: TextField(
-                    controller: _commentEditingController,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                    decoration: const InputDecoration(
-                      labelText: 'Comment',
-                      labelStyle: TextStyle(
-                        fontSize: 20,
-                        color: Colors.blueGrey,
-                        fontWeight: FontWeight.w700,
+                  ListTile(
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        color: Colors.white,
+                        style: BorderStyle.solid,
+                        strokeAlign: BorderSide.strokeAlignOutside,
                       ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.red,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(40),
+                        topRight: Radius.circular(40),
+                      ),
+                    ),
+                    title: TextField(
+                      controller: _commentEditingController,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                      decoration: const InputDecoration(
+                        labelText: 'Comment',
+                        labelStyle: TextStyle(
+                          fontSize: 20,
+                          color: Colors.blueGrey,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.red,
+                          ),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.red,
+                          ),
                         ),
                       ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.red,
-                        ),
+                    ),
+                    trailing: TextButton(
+                      onPressed: () {
+                        if (_commentEditingController.text.isNotEmpty) {
+                          _commentController
+                              .postComment(_commentEditingController.text.trim());
+          
+                          _commentEditingController.clear();
+                        }
+                      },
+                      child: Icon(
+                        Icons.send_rounded,
+                        color: Colors.white,
+                        size: 35,
                       ),
                     ),
-                  ),
-                  trailing: TextButton(
-                    onPressed: () {
-                      if (_commentEditingController.text.isNotEmpty) {
-                        _commentController
-                            .postComment(_commentEditingController.text.trim());
-
-                        _commentEditingController.clear();
-                      }
-                    },
-                    child: Icon(
-                      Icons.send_rounded,
-                      color: Colors.white,
-                      size: 35,
-                    ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
         ));

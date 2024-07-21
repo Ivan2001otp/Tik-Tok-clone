@@ -24,7 +24,7 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
     fijkPlayer.setDataSource(
       widget.videoUrl,
       showCover: true,
-      autoPlay: false,
+      autoPlay: true,
     );
     fijkPlayer.setVolume(0.5);
     fijkPlayer.setLoop(0);

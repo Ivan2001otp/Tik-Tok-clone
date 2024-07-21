@@ -122,6 +122,10 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                           _captionController.text,
                           widget.videoPath,
                         );
+
+                        EasyLoading.showSuccess(
+                          "Success",
+                        );
                         EasyLoading.dismiss();
 
                         Navigator.of(context).pop();

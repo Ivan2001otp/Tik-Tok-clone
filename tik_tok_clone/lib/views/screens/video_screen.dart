@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:tik_tok_clone/controllers/video_controller.dart';
 import 'package:tik_tok_clone/util/constants.dart';
 import 'package:tik_tok_clone/views/screens/comment_screen.dart';
@@ -186,7 +187,9 @@ class VideoScreen extends StatelessWidget {
                                     InkWell(
                                       onTap: () => Navigator.of(context).push(
                                         MaterialPageRoute(
-                                          builder: (context) => CommentScreen(id: data.id,),
+                                          builder: (context) => CommentScreen(
+                                            id: data.id,
+                                          ),
                                         ),
                                       ),
                                       child: const Icon(
@@ -211,7 +214,19 @@ class VideoScreen extends StatelessWidget {
                                 Column(
                                   children: [
                                     InkWell(
-                                      onTap: () {},
+                                      onTap: () async {
+                                        videoController.shareVideo(data.id);
+                                        final result = await Share.share(
+                                          data.videoUrl,
+                                        );
+                                        if (result.status ==
+                                            ShareResultStatus.dismissed) {
+                                          debugPrint('Dismissed!');
+                                        } else if (result.status ==
+                                            ShareResultStatus.unavailable) {
+                                          debugPrint('Unavailable!');
+                                        }
+                                      },
                                       child: const Icon(
                                         Icons.reply,
                                         color: Colors.white,
@@ -222,7 +237,7 @@ class VideoScreen extends StatelessWidget {
                                       height: 1,
                                     ),
                                     Text(
-                                      data.shareCount.toString(),
+                                      data.shareCount.length.toString(),
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 15,
